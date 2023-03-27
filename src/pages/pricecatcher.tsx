@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems } from '../database';
+import { databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems  } from '../database';
 
 function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, initialItems }: any) {
 
@@ -61,6 +61,23 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
       if (group) query.item_group = group;
       if (category) query.item_category = category;
       setItems(await (await fetch('/api/searchItems?' + new URLSearchParams(query))).json());
+    } catch (err: any) {
+      console.log(err);
+    }
+  }
+
+  async function showPriceListJoinPremises(item_code: nummber) {
+    try {
+      const query: {[key: string]: any} = {};
+      query.item_code = item_code;
+      if (state)
+        query.state = state;
+      if (district)
+        query.district = district;
+      if (premiseType)
+        query.premise_type = premiseType;
+      const priceList = await (await fetch('/api/priceListJoinPremises?' + new URLSearchParams(query))).json();
+      console.log(priceList);
     } catch (err: any) {
       console.log(err);
     }
@@ -131,7 +148,33 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
         </div>
 
         <div>
-          <pre>{JSON.stringify(items, undefined, 2)}</pre>
+          <table>
+            <thead>
+              <tr>
+                <th>Kod Barangan</th>
+                <th>Nama</th>
+                <th>Unit</th>
+                <th>Kumpulan</th>
+                <th>Kategori</th>
+                <th>Harga</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item) => {
+                return (
+                  <tr key={item.item_code}>
+                    <td>{item.item_code}</td>
+                    <td>{item.item}</td>
+                    <td>{item.unit}</td>
+                    <td>{item.item_group}</td>
+                    <td>{item.item_category}</td>
+                    <td><button onClick={() => showPriceListJoinPremises(item.item_code)}>Papar Harga</button></td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+
         </div>
       </main>
     </>
