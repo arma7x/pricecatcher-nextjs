@@ -4,6 +4,15 @@ import { itemGroups, itemCategories, premisesNestedLocations } from '../database
 
 function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: any) {
 
+  const flexRow = {
+    display: 'flex',
+    flexDirection: 'row'
+  };
+
+  const marginLeft = {
+    marginLeft: '5px'
+  };
+
   const [group, setGroup] = useState(false);
   const [category, setCategory] = useState(false);
   const [state, setState] = useState(false);
@@ -41,6 +50,10 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: a
       setPremiseType(false);
   };
 
+  function searchItems(event: any) {
+    console.log(event);
+  }
+
   return (
     <>
       <Head>
@@ -50,52 +63,58 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: a
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div style={{ display: 'flex', 'flexDirection': 'row' }}>
-          <div>
-            <select id="item_group" name="item_group" onChange={handleGroupChange}>
-              {['Pilih Kumpulan', ...itemGroups].map((name) => {
-                return (<option key={name} value={name}>{name}</option>);
-              })}
-            </select>
-          </div>
+        <div style={{ ...flexRow, justifyContent: 'space-between' }}>
 
-          <div style={{ 'marginLeft': '5px' }}>
-            <select id="item_category" name="item_category" onChange={handleCategoryChange}>
-              {['Pilih Kategori', ...itemCategories].map((name) => {
-                return (<option key={name} value={name}>{name}</option>);
-              })}
-            </select>
-          </div>
-
-          <div style={{ 'marginLeft': '5px' }}>
-            <select id="state" name="state" onChange={handleStateChange}>
-              {['Pilih Negeri', ...(Object.keys(premisesNestedLocations))].map((name) => {
-                return (<option key={name} value={name}>{name}</option>);
-              })}
-            </select>
-          </div>
-
-          {
-            state &&
-            <div style={{ 'marginLeft': '5px' }}>
-            <select id="district" name="district" onChange={handleDistrictChange}>
-              {['Pilih Daerah', ...(Object.keys(premisesNestedLocations[state.toString()]))].map((name) => {
-                return (<option key={name} value={name}>{name}</option>);
-              })}
-             </select>
+          <div style={flexRow}>
+            <div>
+              <select id="item_group" name="item_group" onChange={handleGroupChange}>
+                {['Pilih Kumpulan', ...itemGroups].map((name) => {
+                  return (<option key={name} value={name}>{name}</option>);
+                })}
+              </select>
             </div>
-          }
 
-          {
-            district &&
-            <div style={{ 'marginLeft': '5px' }}>
-            <select id="premise_type" name="premise_type" onChange={handlePremiseTypeChange}>
-              {['Pilih Jenis Premis', ...premisesNestedLocations[state.toString()][district.toString()]].map((name) => {
-                return (<option key={name} value={name}>{name}</option>);
-              })}
-             </select>
+            <div style={marginLeft}>
+              <select id="item_category" name="item_category" onChange={handleCategoryChange}>
+                {['Pilih Kategori', ...itemCategories].map((name) => {
+                  return (<option key={name} value={name}>{name}</option>);
+                })}
+              </select>
             </div>
-          }
+            <button style={marginLeft} onClick={searchItems}>Cari Barangan</button>
+          </div>
+
+          <div style={flexRow}>
+            <div style={marginLeft}>
+              <select id="state" name="state" onChange={handleStateChange}>
+                {['Pilih Negeri', ...(Object.keys(premisesNestedLocations))].map((name) => {
+                  return (<option key={name} value={name}>{name}</option>);
+                })}
+              </select>
+            </div>
+
+            {
+              state &&
+              <div style={marginLeft}>
+              <select id="district" name="district" onChange={handleDistrictChange}>
+                {['Pilih Daerah', ...(Object.keys(premisesNestedLocations[state.toString()]))].map((name) => {
+                  return (<option key={name} value={name}>{name}</option>);
+                })}
+               </select>
+              </div>
+            }
+
+            {
+              district &&
+              <div style={marginLeft}>
+              <select id="premise_type" name="premise_type" onChange={handlePremiseTypeChange}>
+                {['Pilih Jenis Premis', ...premisesNestedLocations[state.toString()][district.toString()]].map((name) => {
+                  return (<option key={name} value={name}>{name}</option>);
+                })}
+               </select>
+              </div>
+            }
+          </div>
 
         </div>
         <div>
