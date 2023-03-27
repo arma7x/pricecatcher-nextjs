@@ -30,7 +30,7 @@ function searchItems(db: typeof sqlite3.Database, { item_group, item_category }:
     db.serialize(() => {
       db.each(stmt, (err: any, row: Item) => {
         items.push(row);
-      }, (err, num) => {
+      }, (err: any, num: number) => {
         if (err != null)
           reject(err);
         else
@@ -50,7 +50,7 @@ function getItemGroups(db: typeof sqlite3.Database): Promise<Array<String>> {
     db.serialize(() => {
       db.each(stmt, (err: any, row: any) => {
         groups.push(row.item_group);
-      }, (err, num) => {
+      }, (err: any, num: number) => {
         if (err != null)
           reject(err);
         else
@@ -70,7 +70,7 @@ function getItemCategories(db: typeof sqlite3.Database): Promise<Array<String>> 
     db.serialize(() => {
       db.each(stmt, (err: any, row: any) => {
         categories.push(row.item_category);
-      }, (err, num) => {
+      }, (err: any, num: number) => {
         if (err != null)
           reject(err);
         else
@@ -94,7 +94,7 @@ function getPremisesNestedLocations(db: typeof sqlite3.Database): Promise<Nested
         if (nested[row.state][row.district] == null)
           nested[row.state][row.district] = [];
         nested[row.state][row.district].push(row.premise_type);
-      }, (err, num) => {
+      }, (err: any, num: number) => {
         if (err != null)
           reject(err);
         else
