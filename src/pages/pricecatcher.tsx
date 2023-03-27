@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems } from '../database';
 
-function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: any) {
+function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, initialItems }: any) {
 
   const flexRow: {[key: string]: any} = {
     display: 'flex',
@@ -13,11 +13,16 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: a
     marginLeft: '5px'
   };
 
+  const [items, setItems] = useState([]);
   const [group, setGroup] = useState(false);
   const [category, setCategory] = useState(false);
   const [state, setState] = useState(false);
   const [district, setDistrict] = useState(false);
   const [premiseType, setPremiseType] = useState(false);
+
+  useEffect(() => {
+    setItems(initialItems);
+  }, []);
 
   const handleGroupChange = (event: any) => {
     setGroup(itemGroups.indexOf(event.target.value) > -1 ? event.target.value : false);
@@ -117,6 +122,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: a
           </div>
 
         </div>
+
         <div>
           <div>Kumpulan: {group}</div>
           <div>Kategory: {category}</div>
@@ -124,22 +130,29 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: a
           <div>Daerah: {district}</div>
           <div>Jenis Premis: {premiseType}</div>
         </div>
+
+        <pre>{JSON.stringify(items, undefined, 2)}</pre>
       </main>
     </>
   )
 }
 
 export async function getStaticProps() {
-  console.log((await searchItems(databaseInstance, { item_group: 'BARANGAN SEGAR', item_category: 'AYAM' })).length);
-  const a = await itemGroups;
-  const b = await itemCategories;
-  const c = await premisesNestedLocations;
-  return {
-    props: {
-      itemGroups: a,
-      itemCategories: b,
-      premisesNestedLocations: c,
-    },
+  try {
+    const a = await itemGroups;
+    const b = await itemCategories;
+    const c = await premisesNestedLocations;
+    const d = await searchItems(databaseInstance, {}, 50);
+    return {
+      props: {
+        itemGroups: a,
+        itemCategories: b,
+        premisesNestedLocations: c,
+        initialItems: d,
+      },
+    }
+  } catch (err: any) {
+    throw(err);
   }
 }
 

@@ -15,10 +15,10 @@ export type Item = {
   item_category: String,
 }
 
-function searchItems(db: typeof sqlite3.Database, { item_group, item_category }: any, limit: number | null = null): Promise<Array<Item>> {
+function searchItems(db: typeof sqlite3.Database, { item_group, item_category }: any = {}, limit: number | null = null): Promise<Array<Item>> {
   return new Promise((resolve, reject) => {
     let select: Array<String> = ['SELECT item_code, item, unit, item_group, item_category from items'];
-    let where: Array<String> = [];
+    let where: Array<String> = ['item_code !=-1'];
     if (item_group != null)
       where.push(`item_group='${item_group}'`);
     if (item_category != null)
