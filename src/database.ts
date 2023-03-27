@@ -15,7 +15,7 @@ export type Item = {
   item_category: String,
 }
 
-function searchItems(db: typeof sqlite3.Database, { item_group, item_category }: any): Promise<Array<Item>> {
+function searchItems(db: typeof sqlite3.Database, { item_group, item_category }: any, limit: number | null = null): Promise<Array<Item>> {
   return new Promise((resolve, reject) => {
     let select: Array<String> = ['SELECT item_code, item, unit, item_group, item_category from items'];
     let where: Array<String> = [];
@@ -25,8 +25,10 @@ function searchItems(db: typeof sqlite3.Database, { item_group, item_category }:
       where.push(`item_category='${item_category}'`);
     if (where.length > 0)
       select.push(`WHERE ${where.join(' AND ')}`);
+    if (limit != null)
+      select.push(`LIMIT ${limit}`);
     const stmt = select.join(' ');
-    let items: Array<Item> = []
+    let items: Array<Item> = [];
     db.serialize(() => {
       db.each(stmt, (err: any, row: Item) => {
         items.push(row);
