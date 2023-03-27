@@ -7,7 +7,7 @@ export type NestedObject = {
   [key: string]: any;
 }
 
-function getItemGroups(db: any): Array<String> {
+function getItemGroups(db: typeof sqlite3.Database): Array<String> {
   let groups: Array<String> = [];
   const stmt = `SELECT item_group, COUNT(item_group) AS total from items
   WHERE item_group !='UNKNOWN'
@@ -21,7 +21,7 @@ function getItemGroups(db: any): Array<String> {
   return groups;
 }
 
-function getItemCategories(db: any): Array<String> {
+function getItemCategories(db: typeof sqlite3.Database): Array<String> {
   let categories: Array<String> = [];
   const stmt = `SELECT item_category, COUNT(item_category) AS total from items
   WHERE item_category !='UNKNOWN'
@@ -35,7 +35,7 @@ function getItemCategories(db: any): Array<String> {
   return categories;
 }
 
-function getPremisesNestedLocations(db: any): NestedObject {
+function getPremisesNestedLocations(db: typeof sqlite3.Database): NestedObject {
   let nested: NestedObject = {};
   const stmt = `SELECT state, district, premise_type from premises
   WHERE premise_code!=-1
