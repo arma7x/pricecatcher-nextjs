@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems  } from '../database';
+import { Item, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems  } from '../database';
 
 function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, initialItems }: any) {
 
@@ -66,7 +66,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
     }
   }
 
-  async function showPriceListJoinPremises(item_code: nummber) {
+  async function showPriceListJoinPremises(item_code: number) {
     try {
       const query: {[key: string]: any} = {};
       query.item_code = item_code;
@@ -160,7 +160,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
               </tr>
             </thead>
             <tbody>
-              {items.map((item) => {
+              {items.map((item: Item) => {
                 return (
                   <tr key={item.item_code}>
                     <td>{item.item_code}</td>

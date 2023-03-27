@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { databaseInstance, getPriceListJoinPremises } from '../../database';
+import { NestedObject, databaseInstance, getPriceListJoinPremises } from '../../database';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<NestedObject>
 ) {
   try {
     res.status(200).json(await getPriceListJoinPremises(databaseInstance, req.query));

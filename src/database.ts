@@ -29,7 +29,7 @@ export type PriceJoinPremise = {
   district: String,
 }
 
-function searchItems(db: SQLITE, { item_group, item_category }: any = {}, limit: number | null = null): Promise<Array<PriceJoinPremise>> {
+function searchItems(db: SQLITE, { item_group, item_category }: any = {}, limit: number | null = null): Promise<Array<Item>> {
   return new Promise((resolve, reject) => {
     let select: Array<String> = ['SELECT item_code, item, unit, item_group, item_category from items'];
     let where: Array<String> = ['item_code !=-1'];
@@ -56,7 +56,7 @@ function searchItems(db: SQLITE, { item_group, item_category }: any = {}, limit:
   });
 }
 
-function getPriceListJoinPremises(db: SQLITE, { item_code, state, district, premise_type }: any = {}): Promise<Array<Item>> {
+function getPriceListJoinPremises(db: SQLITE, { item_code, state, district, premise_type }: any = {}): Promise<Array<PriceJoinPremise>> {
   if (item_code == null)
     return Promise.reject('Required item_code!');
   return new Promise((resolve, reject) => {
