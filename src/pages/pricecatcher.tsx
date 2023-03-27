@@ -55,8 +55,15 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
       setPremiseType(false);
   };
 
-  function searchItems(event: any) {
-    console.log(event);
+  async function searchItems(event: any) {
+    try {
+      const query: {[key: string]: any} = {};
+      if (group) query.item_group = group;
+      if (category) query.item_category = category;
+      setItems(await (await fetch('/api/searchItems?' + new URLSearchParams(query))).json());
+    } catch (err: any) {
+      console.log(err);
+    }
   }
 
   return (
@@ -124,14 +131,8 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
         </div>
 
         <div>
-          <div>Kumpulan: {group}</div>
-          <div>Kategory: {category}</div>
-          <div>Negeri: {state}</div>
-          <div>Daerah: {district}</div>
-          <div>Jenis Premis: {premiseType}</div>
+          <pre>{JSON.stringify(items, undefined, 2)}</pre>
         </div>
-
-        <pre>{JSON.stringify(items, undefined, 2)}</pre>
       </main>
     </>
   )
