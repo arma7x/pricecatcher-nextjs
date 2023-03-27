@@ -10,32 +10,32 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: a
   const [district, setDistrict] = useState(false);
   const [premiseType, setPremiseType] = useState(false);
 
-  const handleGroupChange = event => {
+  const handleGroupChange = (event: any) => {
     setGroup(itemGroups.indexOf(event.target.value) > -1 ? event.target.value : false);
   }
 
-  const handleCategoryChange = event => {
+  const handleCategoryChange = (event: any) => {
     setCategory(itemCategories.indexOf(event.target.value) > -1 ? event.target.value : false);
   }
 
-  const handleStateChange = event => {
+  const handleStateChange = (event: any) => {
     setState(Object.keys(premisesNestedLocations).indexOf(event.target.value) > -1 ? event.target.value : false);
     setDistrict(false);
     setPremiseType(false);
   };
 
-  const handleDistrictChange = event => {
-    if (Object.keys(premisesNestedLocations[state]).indexOf(event.target.value) > -1) {
+  const handleDistrictChange = (event: any) => {
+    if (Object.keys(premisesNestedLocations[state.toString()]).indexOf(event.target.value) > -1) {
       setDistrict(event.target.value);
-      if (premisesNestedLocations[state][event.target.value].indexOf(premiseType) < 0)
+      if (premisesNestedLocations[state.toString()][event.target.value].indexOf(premiseType) < 0)
         setPremiseType(false);
     } else {
       setDistrict(false);
     }
   };
 
-  const handlePremiseTypeChange = event => {
-    if (premisesNestedLocations[state][district].indexOf(event.target.value) > -1)
+  const handlePremiseTypeChange = (event: any) => {
+    if (premisesNestedLocations[state.toString()][district.toString()].indexOf(event.target.value) > -1)
       setPremiseType(event.target.value);
     else
       setPremiseType(false);
@@ -79,7 +79,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: a
             state &&
             <div style={{ 'marginLeft': '5px' }}>
             <select id="district" name="district" onChange={handleDistrictChange}>
-              {['Pilih Daerah', ...(Object.keys(premisesNestedLocations[state]))].map((name) => {
+              {['Pilih Daerah', ...(Object.keys(premisesNestedLocations[state.toString()]))].map((name) => {
                 return (<option key={name} value={name}>{name}</option>);
               })}
              </select>
@@ -90,7 +90,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: a
             district &&
             <div style={{ 'marginLeft': '5px' }}>
             <select id="premise_type" name="premise_type" onChange={handlePremiseTypeChange}>
-              {['Pilih Jenis Premis', ...premisesNestedLocations[state][district]].map((name) => {
+              {['Pilih Jenis Premis', ...premisesNestedLocations[state.toString()][district.toString()]].map((name) => {
                 return (<option key={name} value={name}>{name}</option>);
               })}
              </select>
