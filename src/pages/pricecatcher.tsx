@@ -1,15 +1,15 @@
 import { useState } from 'react';
 import Head from 'next/head';
-import { itemGroups, itemCategories, premisesNestedLocations } from '../database';
+import { databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems } from '../database';
 
 function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: any) {
 
-  const flexRow = {
+  const flexRow: {[key: string]: any} = {
     display: 'flex',
     flexDirection: 'row'
   };
 
-  const marginLeft = {
+  const marginLeft: {[key: string]: any} = {
     marginLeft: '5px'
   };
 
@@ -130,11 +130,15 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations }: a
 }
 
 export async function getStaticProps() {
+  console.log((await searchItems(databaseInstance, { item_group: 'BARANGAN SEGAR', item_category: 'AYAM' })).length);
+  const a = await itemGroups;
+  const b = await itemCategories;
+  const c = await premisesNestedLocations;
   return {
     props: {
-      itemGroups,
-      itemCategories,
-      premisesNestedLocations,
+      itemGroups: a,
+      itemCategories: b,
+      premisesNestedLocations: c,
     },
   }
 }
