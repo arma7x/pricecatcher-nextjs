@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Item, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems  } from '../database';
+import { Item, PriceJoinPremise, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems  } from '../database';
+import Modal from '../Modal';
 
 function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, initialItems }: any) {
 
@@ -13,6 +14,9 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
     marginLeft: '5px'
   };
 
+  const [item, setItem] = useState({});
+  const [visible, setVisibility] = useState(false);
+  const [priceList, setPriceList] = useState([]);
   const [items, setItems] = useState([]);
   const [group, setGroup] = useState(false);
   const [category, setCategory] = useState(false);
@@ -66,10 +70,11 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
     }
   }
 
-  async function showPriceListJoinPremises(item_code: number) {
+  async function showPriceListJoinPremises(item: Item) {
     try {
+      setItem(item);
       const query: {[key: string]: any} = {};
-      query.item_code = item_code;
+      query.item_code = item.item_code;
       if (state)
         query.state = state;
       if (district)
@@ -77,10 +82,18 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
       if (premiseType)
         query.premise_type = premiseType;
       const priceList = await (await fetch('/api/priceListJoinPremises?' + new URLSearchParams(query))).json();
-      console.log(priceList);
+      setPriceList(priceList);
+      if (priceList.length > 0) {
+        setVisibility(true);
+      }
     } catch (err: any) {
       console.log(err);
     }
+  }
+
+  function toggleModal() {
+    const t = !visible;
+    setVisibility(t);
   }
 
   return (
@@ -148,6 +161,12 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
         </div>
 
         <div>
+          <Modal visibility={visible} setVisibility={setVisibility}>
+            <pre>{JSON.stringify(item, undefined, 2)}</pre>
+            <pre>
+              {JSON.stringify(priceList, undefined, 2)}
+            </pre>
+          </Modal>
           <table>
             <thead>
               <tr>
@@ -168,7 +187,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
                     <td>{item.unit}</td>
                     <td>{item.item_group}</td>
                     <td>{item.item_category}</td>
-                    <td><button onClick={() => showPriceListJoinPremises(item.item_code)}>Papar Harga</button></td>
+                    <td><button onClick={() => showPriceListJoinPremises(item)}>Papar Harga</button></td>
                   </tr>
                 );
               })}
