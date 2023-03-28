@@ -40,13 +40,58 @@ export type PriceJoinPremise = {
 
 export type PremisesQueryOutput = {
   premises: Array<Premise>,
-  prev_page: number | null,
-  next_page: number | null,
+  previous: number | null,
+  current: number,
+  next: number | null,
+  total: number
 }
 
 function searchPremises(db: SQLITE, { state, district, premise_type }: any = {}, page: number = 1, limit: number = 50) {
-  if (page < 1) page = 1;
-  let offset = (page - 1) * limit;
+  return new Promise((resolve, reject) => {
+    if (page < 1) page = 1;
+    let offset = (page - 1) * limit;
+    let selectCount: Array<String> = ['select COUNT(premise_code) as total from premises'];
+    let select: Array<String> = ['select * from premises'];
+    let where: Array<String> = ['premise_code !=-1'];
+    if (state)
+      where.push(`state='${state}'`);
+    if (district)
+      where.push(`district='${district}'`);
+    if (premise_type)
+      where.push(`premise_type='${premise_type}'`);
+    let limitOffset: Array<String> = [`LIMIT ${limit}`, `OFFSET ${offset}`];
+    select.push(`WHERE ${where.join(' AND ')}`);
+    select.push(limitOffset.join(' '));
+    selectCount.push(`WHERE ${where.join(' AND ')}`);
+    let premises: Array<Premise> = [];
+    db.serialize(() => {
+      db.each(select.join(' '), (err: any, row: Premise) => {
+        premises.push(row);
+      }, (err: any, num: number) => {
+        if (err != null) {
+          reject(err);
+        } else {
+          let total: number = 0;
+          db.each(selectCount.join(' '), (err: any, row: NestedObject) => {
+            total = row.total;
+          }, (err: any, num: number) => {
+            if (err != null)
+              reject(err);
+            else {
+              const result = {
+                premises,
+                previous: page > 1 ? page - 1 : null,
+                current: page,
+                next: ((page - 1) * limit) + premises.length < total ? page + 1 : null,
+                total,
+              } as PremisesQueryOutput;
+              resolve(result);
+            }
+          });
+        }
+      });
+    });
+  });
 }
 
 function searchItems(db: SQLITE, { item_group, item_category }: any = {}, limit: number | null = null): Promise<Array<Item>> {
@@ -186,4 +231,5 @@ export {
   premisesNestedLocations,
   searchItems,
   getPriceListJoinPremises,
+  searchPremises,
 }

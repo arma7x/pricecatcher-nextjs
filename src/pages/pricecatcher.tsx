@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Item, PriceJoinPremise, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems  } from '../database';
+import { Item, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems } from '../database';
 import Modal from '../Modal';
 
 function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, initialItems }: any) {
