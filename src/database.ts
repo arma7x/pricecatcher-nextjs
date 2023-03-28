@@ -9,6 +9,15 @@ export type NestedObject = {
   [key: string]: any;
 }
 
+export type Premise = {
+  premise_code: number,
+  permise: String,
+  address: String,
+  premise_type: String,
+  state: String,
+  district: String,
+}
+
 export type Item = {
   item_code: number,
   item: String,
@@ -27,6 +36,17 @@ export type PriceJoinPremise = {
   premise_type: String,
   state: String,
   district: String,
+}
+
+export type PremisesQueryOutput = {
+  premises: Array<Premise>,
+  prev_page: number | null,
+  next_page: number | null,
+}
+
+function searchPremises(db: SQLITE, { state, district, premise_type }: any = {}, page: number = 1, limit: number = 50) {
+  if (page < 1) page = 1;
+  let offset = (page - 1) * limit;
 }
 
 function searchItems(db: SQLITE, { item_group, item_category }: any = {}, limit: number | null = null): Promise<Array<Item>> {
