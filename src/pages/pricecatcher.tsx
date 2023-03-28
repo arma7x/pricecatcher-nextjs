@@ -7,12 +7,17 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
 
   const flexRow: {[key: string]: any} = {
     display: 'flex',
-    flexDirection: 'row'
+    flexDirection: 'row',
   };
 
   const marginLeft: {[key: string]: any} = {
     marginLeft: '5px'
   };
+
+  const thPadTop: {[key: string]: any} = {
+    top: '50px',
+    marginTop: '50px'
+  }
 
   const [item, setItem] = useState({});
   const [visible, setVisibility] = useState(false);
@@ -105,8 +110,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main>
-        <div style={{ ...flexRow, justifyContent: 'space-between' }}>
-
+        <div style={{ ...flexRow, alignItems: 'center', justifyContent: 'space-between', position: 'fixed', zIndex: 99, backgroundColor: '#fff', width: '100%', height: '50px' }}>
           <div style={flexRow}>
             <div>
               <select id="item_group" name="item_group" onChange={handleGroupChange}>
@@ -157,10 +161,9 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
               </div>
             }
           </div>
-
         </div>
 
-        <div>
+        <div style={{ position: 'absolute', marginTop: '50px' }}>
           <Modal visibility={visible} setVisibility={setVisibility}>
             <pre>{JSON.stringify(item, undefined, 2)}</pre>
             <pre>
@@ -170,12 +173,12 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
           <table>
             <thead>
               <tr>
-                <th>Kod Barangan</th>
-                <th>Nama</th>
-                <th>Unit</th>
-                <th>Kumpulan</th>
-                <th>Kategori</th>
-                <th>Harga</th>
+                <th style={thPadTop}>Kod Barangan</th>
+                <th style={thPadTop}>Nama</th>
+                <th style={thPadTop}>Unit</th>
+                <th style={thPadTop}>Kumpulan</th>
+                <th style={thPadTop}>Kategori</th>
+                <th style={thPadTop}>Harga</th>
               </tr>
             </thead>
             <tbody>

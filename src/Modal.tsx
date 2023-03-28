@@ -4,6 +4,7 @@ function Modal({ children, visibility, setVisibility }: any) {
 
   const modalStyle: {[key: string]: any}  = {
     top: 0,
+    zIndex: 99999,
     position: 'fixed',
     minHeight: '100vh',
     minWidth: '100vw',
