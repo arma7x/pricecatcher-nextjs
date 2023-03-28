@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 
 function Modal({ children, visibility, setVisibility }: any) {
 
-  const modalStyle = {
+  const modalStyle: {[key: string]: any}  = {
     top: 0,
     position: 'fixed',
     minHeight: '100vh',
@@ -12,14 +12,14 @@ function Modal({ children, visibility, setVisibility }: any) {
     alignItem: 'center',
   };
 
-  const modalContainer = {
+  const modalContainer: {[key: string]: any}  = {
     padding: '50px 50px 0px 50px',
     backgroundColor: 'rgba(0, 0, 0, 0.7)',
     minHeight: '100vh',
     minWidth: '100vw',
   }
 
-  const modalContent = {
+  const modalContent: {[key: string]: any}  = {
     backgroundColor: 'white',
     width: 'calc(100vw - 100px)',
     maxHeight: 'calc(100vh - 100px)',
