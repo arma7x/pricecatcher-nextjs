@@ -11,7 +11,7 @@ export type NestedObject = {
 
 export type Premise = {
   premise_code: number,
-  permise: String,
+  premise: String,
   address: String,
   premise_type: String,
   state: String,
@@ -46,9 +46,10 @@ export type PremisesQueryOutput = {
   total: number
 }
 
-function searchPremises(db: SQLITE, { state, district, premise_type }: any = {}, page: number = 1, limit: number = 50) {
+function searchPremises(db: SQLITE, { state, district, premise_type, page }: any = {}, limit: number = 50) {
   return new Promise((resolve, reject) => {
-    if (page < 1) page = 1;
+    if (page < 1 || page == null) page = 1;
+    page = parseInt(page)
     let offset = (page - 1) * limit;
     let selectCount: Array<String> = ['select COUNT(premise_code) as total from premises'];
     let select: Array<String> = ['select * from premises'];

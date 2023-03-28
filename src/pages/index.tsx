@@ -68,6 +68,15 @@ export default function Home() {
               PriceCatcher
             </h2>
           </Link>
+          <Link
+            href="/premises"
+            className={styles.card}
+            rel="noopener noreferrer"
+          >
+            <h2>
+              Senarai Premis
+            </h2>
+          </Link>
         </div>
       </main>
     </>
