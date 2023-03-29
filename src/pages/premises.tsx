@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { NestedObject, Premise, SearchPremisesQueryOutput, itemGroups, itemCategories, databaseInstance, premisesNestedLocations, searchPremises, getPriceListJoinItems } from '../database';
+import { NestedObject, Premise, SearchPremisesQueryOutput, itemGroups, itemCategories, databaseInstance, premisesNestedLocations, searchPremises } from '../database';
 import Modal from '../Modal';
 
 function Premises({ itemGroups, itemCategories, premisesNestedLocations, initialPremises }: any) {
@@ -204,7 +204,6 @@ export async function getStaticProps() {
     const b = await itemCategories;
     const c = await premisesNestedLocations;
     const d = await searchPremises(databaseInstance, {});
-    await getPriceListJoinItems(databaseInstance, { premise_code: 2, item_group: 'BARANGAN SEGAR', item_category: 'AYAM' });
     return {
       props: {
         itemGroups: a,

@@ -170,21 +170,32 @@ function getPriceListJoinPremises(db: SQLITE, { item_code, state, district, prem
   });
 }
 
-// return Promise<Array<PriceJoinItem>>
-function getPriceListJoinItems(db: SQLITE, { premise_code, item_group, item_category }: any = {}) {
-  let select: Array<String> = ['SELECT prices.premise_code, prices.date, prices.price, items.*  FROM prices'];
-  let join: Array<String> = ['LEFT JOIN items ON prices.item_code = items.item_code'];
-  let where: Array<String> = [];
-  if (premise_code)
-    where.push(`prices.premise_code=${premise_code}`);
-  if (item_group)
-    where.push(`items.item_group='${item_group}'`);
-  if (item_category)
-    where.push(`items.item_category='${item_category}'`);
-  select.push(join.join(' '));
-  if (where.length > 0)
-    select.push(`WHERE ${where.join(' AND ')}`);
-  console.log('stmt:', select.join(' '));
+function getPriceListJoinItems(db: SQLITE, { premise_code, item_group, item_category }: any = {}): Promise<Array<PriceJoinItem>> {
+  return new Promise((resolve, reject) => {
+    let select: Array<String> = ['SELECT prices.premise_code, prices.date, prices.price, items.*  FROM prices'];
+    let join: Array<String> = ['LEFT JOIN items ON prices.item_code = items.item_code'];
+    let where: Array<String> = [];
+    if (premise_code)
+      where.push(`prices.premise_code=${premise_code}`);
+    if (item_group)
+      where.push(`items.item_group='${item_group}'`);
+    if (item_category)
+      where.push(`items.item_category='${item_category}'`);
+    select.push(join.join(' '));
+    if (where.length > 0)
+      select.push(`WHERE ${where.join(' AND ')}`);
+    let items: Array<PriceJoinItem> = [];
+    db.serialize(() => {
+      db.each(select.join(' '), (err: any, row: PriceJoinItem) => {
+        items.push(row);
+      }, (err: any, num: number) => {
+        if (err != null)
+          reject(err);
+        else
+          resolve(items);
+      });
+    });
+  });
 }
 
 function getItemGroups(db: SQLITE): Promise<Array<String>> {
