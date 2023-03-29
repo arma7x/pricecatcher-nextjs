@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { NestedObject, Premise, PremisesQueryOutput, databaseInstance, premisesNestedLocations, searchPremises } from '../database';
+import { NestedObject, Premise, SearchPremisesQueryOutput, databaseInstance, premisesNestedLocations, searchPremises } from '../database';
 
 function Premises({ premisesNestedLocations, initialPremises }: any) {
 
@@ -18,7 +18,7 @@ function Premises({ premisesNestedLocations, initialPremises }: any) {
     marginTop: '50px'
   }
 
-  let result: PremisesQueryOutput = {};
+  let result: SearchPremisesQueryOutput = {};
 
   const [premises, setPremises] = useState([]);
   const [current, setCurrent] = useState(0);

@@ -38,7 +38,7 @@ export type PriceJoinPremise = {
   district: String,
 }
 
-export type PremisesQueryOutput = {
+export type SearchPremisesQueryOutput = {
   premises: Array<Premise>,
   previous: number | null,
   current: number,
@@ -85,7 +85,7 @@ function searchPremises(db: SQLITE, { state, district, premise_type, page }: any
                 current: page,
                 next: ((page - 1) * limit) + premises.length < total ? page + 1 : null,
                 total,
-              } as PremisesQueryOutput;
+              } as SearchPremisesQueryOutput;
               resolve(result);
             }
           });
