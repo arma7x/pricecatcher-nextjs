@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { NestedObject, Premise, SearchPremisesQueryOutput, itemGroups, itemCategories, databaseInstance, premisesNestedLocations, searchPremises } from '../database';
+import { PriceJoinItem, NestedObject, Premise, SearchPremisesQueryOutput, itemGroups, itemCategories, databaseInstance, premisesNestedLocations, searchPremises } from '../database';
 import Modal from '../Modal';
 
 function Premises({ itemGroups, itemCategories, premisesNestedLocations, initialPremises }: any) {
@@ -30,6 +30,9 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
   const [state, setState] = useState(false);
   const [district, setDistrict] = useState(false);
   const [premiseType, setPremiseType] = useState(false);
+  const [items, setItems] = useState([]);
+  const [group, setGroup] = useState(false);
+  const [category, setCategory] = useState(false);
 
   useEffect(() => {
     setPremises(initialPremises.premises);
@@ -37,6 +40,14 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
     setNext(initialPremises.next);
     setPrevious(initialPremises.previous);
   }, [initialPremises]);
+
+  const handleGroupChange = (event: any) => {
+    setGroup(itemGroups.indexOf(event.target.value) > -1 ? event.target.value : false);
+  }
+
+  const handleCategoryChange = (event: any) => {
+    setCategory(itemCategories.indexOf(event.target.value) > -1 ? event.target.value : false);
+  }
 
   const handleStateChange = (event: any) => {
     setState(Object.keys(premisesNestedLocations).indexOf(event.target.value) > -1 ? event.target.value : false);
@@ -88,7 +99,20 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
 
   function selectPremise(premise: Premise) {
     setPremise(premise);
+    setItems([]);
     toggleModal();
+  }
+
+  async function searchItems(event: any) {
+    try {
+      const query: {[key: string]: any} = {};
+      if (premise) query.premise_code = premise.premise_code;
+      if (group) query.item_group = group;
+      if (category) query.item_category = category;
+      setItems(await (await fetch('/api/priceListJoinItems?' + new URLSearchParams(query))).json());
+    } catch (err: any) {
+      console.log(err);
+    }
   }
 
   return (
@@ -159,10 +183,67 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
         </div>
         <div style={{ position: 'absolute', marginTop: '50px' }}>
           <Modal visibility={visible} setVisibility={setVisibility}>
-            <pre>{JSON.stringify(premise, undefined, 2)}</pre>
-            <pre>
-              {JSON.stringify({}, undefined, 2)}
-            </pre>
+            {
+              Object.keys(premise.length > 0) &&
+              <div style={{ ...flexRow, alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#fff', width: '100%' }}>
+                <h3>
+                  {premise["premise"]}, {premise["address"]}
+                </h3>
+                <h3>
+                  {premise["premise_type"]}, {premise["state"]}, {premise["district"]}
+                </h3>
+              </div>
+            }
+            <div style={{ ...flexRow, alignItems: 'center', position: 'sticky', top: 0, zIndex: 99, backgroundColor: '#fff', width: '100%', height: '50px' }}>
+              <div>
+                <select id="item_group" name="item_group" onChange={handleGroupChange}>
+                  {['Pilih Kumpulan', ...itemGroups].map((name) => {
+                    return (<option key={name} value={name}>{name}</option>);
+                  })}
+                </select>
+              </div>
+
+              <div style={marginLeft}>
+                <select id="item_category" name="item_category" onChange={handleCategoryChange}>
+                  {['Pilih Kategori', ...itemCategories].map((name) => {
+                    return (<option key={name} value={name}>{name}</option>);
+                  })}
+                </select>
+              </div>
+              <button style={marginLeft} onClick={searchItems}>Cari Barangan</button>
+            </div>
+            <div>
+              <table>
+                <thead>
+                  <tr>
+                    <th style={thPadTop}>Kod Barangan</th>
+                    <th style={thPadTop}>Kod Premise</th>
+                    <th style={thPadTop}>Tarikh</th>
+                    <th style={thPadTop}>Barangan</th>
+                    <th style={thPadTop}>Unit</th>
+                    <th style={thPadTop}>Kumpulan</th>
+                    <th style={thPadTop}>Kategori</th>
+                    <th style={thPadTop}>Harga</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item: PriceJoinItem) => {
+                    return (
+                      <tr key={item.item_code}>
+                        <td>{item.item_code}</td>
+                        <td>{item.premise_code}</td>
+                        <td>{item.date}</td>
+                        <td>{item.item}</td>
+                        <td>{item.item}</td>
+                        <td>{item.item_group}</td>
+                        <td>{item.item_category}</td>
+                        <td>RM{parseFloat(item.price).toFixed(2)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </Modal>
           <table>
             <thead>

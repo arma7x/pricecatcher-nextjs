@@ -25,6 +25,7 @@ function Modal({ children, visibility, setVisibility }: any) {
     width: 'calc(100vw - 100px)',
     maxHeight: 'calc(100vh - 100px)',
     overflowY: 'scroll',
+    position: 'relative',
   }
 
   useEffect(() => {
