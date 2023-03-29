@@ -156,17 +156,17 @@ function getPriceListJoinPremises(db: SQLITE, { item_code, state, district, prem
     select.push(`ORDER BY ${orderBy.join(' ')}`);
     let priceList: Array<PriceJoinPremise> = [];
     const stmt = select.join(' ');
-      let items: Array<Item> = [];
-      db.serialize(() => {
-        db.each(stmt, (err: any, row: PriceJoinPremise) => {
-          priceList.push(row);
-        }, (err: any, num: number) => {
-          if (err != null)
-            reject(err);
-          else
-            resolve(priceList);
-        });
+    let items: Array<Item> = [];
+    db.serialize(() => {
+      db.each(stmt, (err: any, row: PriceJoinPremise) => {
+        priceList.push(row);
+      }, (err: any, num: number) => {
+        if (err != null)
+          reject(err);
+        else
+          resolve(priceList);
       });
+    });
   });
 }
 
