@@ -2,22 +2,9 @@ import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { Item, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems } from '../database';
 import Modal from '../Modal';
+import { flexRow, marginLeft, thPadTop } from '../styles/styles';
 
 function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, initialItems }: any) {
-
-  const flexRow: {[key: string]: any} = {
-    display: 'flex',
-    flexDirection: 'row',
-  };
-
-  const marginLeft: {[key: string]: any} = {
-    marginLeft: '5px'
-  };
-
-  const thPadTop: {[key: string]: any} = {
-    top: '50px',
-    marginTop: '50px'
-  }
 
   const [item, setItem] = useState({});
   const [visible, setVisibility] = useState(false);
