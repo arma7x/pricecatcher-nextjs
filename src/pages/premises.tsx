@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { NestedObject, Premise, SearchPremisesQueryOutput, itemGroups, itemCategories, databaseInstance, premisesNestedLocations, searchPremises } from '../database';
+import Modal from '../Modal';
 
 function Premises({ itemGroups, itemCategories, premisesNestedLocations, initialPremises }: any) {
 
@@ -20,6 +21,8 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
 
   let result: SearchPremisesQueryOutput = {} as SearchPremisesQueryOutput;
 
+  const [premise, setPremise] = useState({});
+  const [visible, setVisibility] = useState(false);
   const [premises, setPremises] = useState<Array<Premise>>([]);
   const [current, setCurrent] = useState(0);
   const [next, setNext] = useState<number|null>(0);
@@ -76,6 +79,16 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
     } catch (err: any) {
       console.log(err);
     }
+  }
+
+  function toggleModal() {
+    const t = !visible;
+    setVisibility(t);
+  }
+
+  function selectPremise(premise: Premise) {
+    setPremise(premise);
+    toggleModal();
   }
 
   return (
@@ -145,6 +158,12 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
           </div>
         </div>
         <div style={{ position: 'absolute', marginTop: '50px' }}>
+          <Modal visibility={visible} setVisibility={setVisibility}>
+            <pre>{JSON.stringify(premise, undefined, 2)}</pre>
+            <pre>
+              {JSON.stringify({}, undefined, 2)}
+            </pre>
+          </Modal>
           <table>
             <thead>
               <tr>
@@ -167,7 +186,7 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
                     <td>{premise.premise_type}</td>
                     <td>{premise.state}</td>
                     <td>{premise.district}</td>
-                    <td><button>Papar Barangan</button></td>
+                    <td><button onClick={() => selectPremise(premise)}>Papar Barangan</button></td>
                   </tr>
                 );
               })}
