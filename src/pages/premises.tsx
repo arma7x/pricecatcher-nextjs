@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { NestedObject, Premise, SearchPremisesQueryOutput, databaseInstance, premisesNestedLocations, searchPremises } from '../database';
+import { NestedObject, Premise, SearchPremisesQueryOutput, itemGroups, itemCategories, databaseInstance, premisesNestedLocations, searchPremises } from '../database';
 
-function Premises({ premisesNestedLocations, initialPremises }: any) {
+function Premises({ itemGroups, itemCategories, premisesNestedLocations, initialPremises }: any) {
 
   const flexRow: {[key: string]: any} = {
     display: 'flex',
@@ -181,12 +181,16 @@ function Premises({ premisesNestedLocations, initialPremises }: any) {
 
 export async function getStaticProps() {
   try {
-    const a = await premisesNestedLocations;
-    const b = await searchPremises(databaseInstance, {});
+    const a = await itemGroups;
+    const b = await itemCategories;
+    const c = await premisesNestedLocations;
+    const d = await searchPremises(databaseInstance, {});
     return {
       props: {
-        premisesNestedLocations: a,
-        initialPremises: b,
+        itemGroups: a,
+        itemCategories: b,
+        premisesNestedLocations: c,
+        initialPremises: d,
       },
     }
   } catch (err: any) {
