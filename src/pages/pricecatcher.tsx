@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Item, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems } from '../database';
+import { Item, PriceJoinPremise, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems } from '../database';
 import Modal from '../Modal';
 import { flexRow, marginLeft, thPadTop } from '../styles/styles';
 
@@ -15,6 +15,11 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
   const [state, setState] = useState(false);
   const [district, setDistrict] = useState(false);
   const [premiseType, setPremiseType] = useState(false);
+
+  const padTop: {[key: string]: any} = {
+    top: '65px',
+    marginTop: '65px'
+  };
 
   useEffect(() => {
     setItems(initialItems);
@@ -152,10 +157,51 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
 
         <div style={{ position: 'absolute', marginTop: '50px' }}>
           <Modal visibility={visible} setVisibility={setVisibility}>
-            <pre>{JSON.stringify(item, undefined, 2)}</pre>
-            <pre>
-              {JSON.stringify(priceList, undefined, 2)}
-            </pre>
+            {
+              Object.keys(item.length > 0) &&
+              <div style={{ ...flexRow, alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 99, backgroundColor: '#fff', width: '100%', height: '65px' }}>
+                <h3>
+                  Kod Barangan: {item["item_code"]}, {item["item"]}, {item["unit"]}
+                </h3>
+                <h3>
+                  {item["item_group"]}, {item["item_category"]}
+                </h3>
+              </div>
+            }
+            <div>
+              <table>
+                <thead>
+                  <tr>
+                    <th style={padTop}>Tarikh</th>
+                    <th style={padTop}>Kod Premis</th>
+                    <th style={padTop}>Kod Barangan</th>
+                    <th style={padTop}>Harga</th>
+                    <th style={padTop}>Premis</th>
+                    <th style={padTop}>Alamat</th>
+                    <th style={padTop}>Jenis Premis</th>
+                    <th style={padTop}>Negeri</th>
+                    <th style={padTop}>Daerah</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {priceList.map((item: PriceJoinPremise) => {
+                    return (
+                      <tr key={item.item_code}>
+                        <td>{item.date}</td>
+                        <td>{item.premise_code}</td>
+                        <td>{item.item_code}</td>
+                        <td>RM{parseFloat(item.price).toFixed(2)}</td>
+                        <td>{item.premise}</td>
+                        <td>{item.address}</td>
+                        <td>{item.premise_type}</td>
+                        <td>{item.state}</td>
+                        <td>{item.district}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </Modal>
           <table>
             <thead>
