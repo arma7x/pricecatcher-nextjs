@@ -171,7 +171,7 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
         <div style={{ position: 'absolute', marginTop: '50px' }}>
           <Modal visibility={visible} setVisibility={setVisibility}>
             {
-              Object.keys(premise.length > 0) &&
+              Object.keys(premise).length > 0 &&
               <div style={{ ...flexRow, alignItems: 'center', justifyContent: 'space-between', backgroundColor: '#fff', width: '100%' }}>
                 <h3>
                   {premise["premise"]}, {premise["address"]}
