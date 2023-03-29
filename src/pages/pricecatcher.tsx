@@ -31,7 +31,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
 
   useEffect(() => {
     setItems(initialItems);
-  }, []);
+  }, [initialItems]);
 
   const handleGroupChange = (event: any) => {
     setGroup(itemGroups.indexOf(event.target.value) > -1 ? event.target.value : false);

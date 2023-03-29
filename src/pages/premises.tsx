@@ -18,12 +18,12 @@ function Premises({ premisesNestedLocations, initialPremises }: any) {
     marginTop: '50px'
   }
 
-  let result: SearchPremisesQueryOutput = {};
+  let result: SearchPremisesQueryOutput = {} as SearchPremisesQueryOutput;
 
-  const [premises, setPremises] = useState([]);
+  const [premises, setPremises] = useState<Array<Premise>>([]);
   const [current, setCurrent] = useState(0);
-  const [next, setNext] = useState(0);
-  const [previous, setPrevious] = useState(0);
+  const [next, setNext] = useState<number|null>(0);
+  const [previous, setPrevious] = useState<number|null>(0);
   const [state, setState] = useState(false);
   const [district, setDistrict] = useState(false);
   const [premiseType, setPremiseType] = useState(false);
