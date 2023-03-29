@@ -43,7 +43,8 @@ export type SearchPremisesQueryOutput = {
   previous: number | null,
   current: number,
   next: number | null,
-  total: number
+  total: number,
+  limit: number
 }
 
 function searchPremises(db: SQLITE, { state, district, premise_type, page }: any = {}, limit: number = 50): Promise<SearchPremisesQueryOutput> {
@@ -85,6 +86,7 @@ function searchPremises(db: SQLITE, { state, district, premise_type, page }: any
                 current: page,
                 next: ((page - 1) * limit) + premises.length < total ? page + 1 : null,
                 total,
+                limit
               };
               resolve(result);
             }
