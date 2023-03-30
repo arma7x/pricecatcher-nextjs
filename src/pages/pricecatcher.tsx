@@ -61,7 +61,10 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
       const query: {[key: string]: any} = {};
       if (group) query.item_group = group;
       if (category) query.item_category = category;
-      setItems(await (await fetch('/api/searchItems?' + new URLSearchParams(query))).json());
+      let items: Array<Item> = await (await fetch('/api/searchItems?' + new URLSearchParams(query))).json();
+      setItems(items);
+      if (items.length === 0)
+        alert("Hasil carian 0");
     } catch (err: any) {
       console.log(err);
     }
@@ -80,6 +83,8 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
         query.premise_type = premiseType;
       const priceList = await (await fetch('/api/priceListJoinPremises?' + new URLSearchParams(query))).json();
       setPriceList(priceList);
+      if (priceList.length === 0)
+        alert("Hasil carian 0");
       if (priceList.length > 0) {
         setVisibility(true);
       }

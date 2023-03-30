@@ -96,7 +96,10 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
       if (premise) query.premise_code = premise.premise_code;
       if (group) query.item_group = group;
       if (category) query.item_category = category;
-      setItems(await (await fetch('/api/priceListJoinItems?' + new URLSearchParams(query))).json());
+      let items: Array<PriceJoinItem> = await (await fetch('/api/priceListJoinItems?' + new URLSearchParams(query))).json();
+      setItems(items);
+      if (items.length === 0)
+        alert("Hasil carian 0");
     } catch (err: any) {
       console.log(err);
     }
