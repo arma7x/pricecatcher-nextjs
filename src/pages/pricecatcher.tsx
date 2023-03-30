@@ -186,7 +186,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
                 <tbody>
                   {priceList.map((item: PriceJoinPremise) => {
                     return (
-                      <tr key={item.item_code}>
+                      <tr key={item.item_code.toString() + '_' + item.premise_code.toString()}>
                         <td>{item.date}</td>
                         <td>{item.premise_code}</td>
                         <td>{item.item_code}</td>

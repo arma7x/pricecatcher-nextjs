@@ -139,9 +139,9 @@ function getPriceListJoinPremises(db: SQLITE, { item_code, state, district, prem
   if (item_code == null)
     return Promise.reject('Required item_code!');
   return new Promise((resolve, reject) => {
-    let select: Array<String> = ['SELECT prices.*, premises.* from prices'];
+    let select: Array<String> = ['SELECT prices.date, prices.item_code, prices.price, premises.* from prices '];
     let join: Array<String> = ['LEFT JOIN premises ON premises.premise_code = prices.premise_code'];
-    let where: Array<String> = ['item_code !=-1'];
+    let where: Array<String> = ['premises.premise_code not NULL', 'item_code !=-1'];
     if (item_code)
       where.push(`prices.item_code=${item_code}`);
     if (state)

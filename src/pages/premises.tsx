@@ -216,7 +216,7 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
                 <tbody>
                   {items.map((item: PriceJoinItem) => {
                     return (
-                      <tr key={item.item_code}>
+                      <tr key={item.item_code.toString() + '_' + item.premise_code.toString()}>
                         <td>{item.item_code}</td>
                         <td>{item.premise_code}</td>
                         <td>{item.date}</td>
