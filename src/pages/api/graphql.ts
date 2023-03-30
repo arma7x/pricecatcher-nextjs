@@ -1,9 +1,8 @@
 import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
-import { gql } from 'graphql-tag';
 import { databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems, searchPremises, getPriceListJoinItems, getPriceListJoinPremises } from '../../database';
 
-const typeDefs = gql`#graphql
+const typeDefs = `#graphql
 
   type Location {
     state: String
