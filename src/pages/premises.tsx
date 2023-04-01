@@ -8,7 +8,7 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
 
   let result: SearchPremisesQueryOutput = {} as SearchPremisesQueryOutput;
 
-  const [premise, setPremise] = useState({});
+  const [premise, setPremise] = useState<Premise|NestedObject>({});
   const [visible, setVisibility] = useState(false);
   const [premises, setPremises] = useState<Array<Premise>>([]);
   const [current, setCurrent] = useState(0);
@@ -17,7 +17,7 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
   const [state, setState] = useState(false);
   const [district, setDistrict] = useState(false);
   const [premiseType, setPremiseType] = useState(false);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<Array<PriceJoinItem>>([]);
   const [group, setGroup] = useState(false);
   const [category, setCategory] = useState(false);
 
@@ -227,7 +227,7 @@ function Premises({ itemGroups, itemCategories, premisesNestedLocations, initial
                         <td>{item.item}</td>
                         <td>{item.item_group}</td>
                         <td>{item.item_category}</td>
-                        <td>RM{parseFloat(item.price).toFixed(2)}</td>
+                        <td>RM{item.price.toFixed(2)}</td>
                       </tr>
                     );
                   })}

@@ -1,6 +1,6 @@
 import { ApolloServer } from '@apollo/server';
 import { startServerAndCreateNextHandler } from '@as-integrations/next';
-import { databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems, searchPremises, getPriceListJoinItems, getPriceListJoinPremises } from '../../database';
+import { NestedObject, Item, SearchPremisesQueryOutput, PriceJoinPremise, PriceJoinItem, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems, searchPremises, getPriceListJoinItems, getPriceListJoinPremises } from '../../database';
 
 const typeDefs = `#graphql
 
@@ -72,14 +72,14 @@ const typeDefs = `#graphql
 
 const resolvers = {
   Query: {
-    itemGroups: async () => {
+    itemGroups: async (): Promise<Array<String>> => {
       return await itemGroups;
     },
-    itemCategories: async () => {
+    itemCategories: async (): Promise<Array<String>> => {
       return await itemCategories;
     },
-    premisesNestedLocations: async () => {
-      const result = [];
+    premisesNestedLocations: async (): Promise<Array<NestedObject>> => {
+      const result: Array<NestedObject> = [];
       const locations = await premisesNestedLocations;
       for (let state in locations) {
         for (let district in locations[state]) {
@@ -92,16 +92,16 @@ const resolvers = {
       }
       return result;
     },
-    searchItems: async (_, args) => {
-      let query = {};
+    searchItems: async (_: any, args: any): Promise<Array<Item>> => {
+      let query: NestedObject = {};
       if (args.item_group != null)
         query.item_group = args.item_group;
       if (args.item_category != null)
         query.item_category = args.item_category;
       return searchItems(databaseInstance, query, args.limit);
     },
-    searchPremises: async (_, args) => {
-      let query = {};
+    searchPremises: async (_: any, args: any): Promise<SearchPremisesQueryOutput> => {
+      let query: NestedObject = {};
       if (args.state != null)
         query.state = args.state;
       if (args.district != null)
@@ -112,8 +112,8 @@ const resolvers = {
         query.page = args.page;
       return searchPremises(databaseInstance, query, args.limit);
     },
-    getPriceListJoinPremises: async (_, args) => {
-      let query = {
+    getPriceListJoinPremises: async (_: any, args: any): Promise<Array<PriceJoinPremise>> => {
+      let query: NestedObject = {
         item_code: args.item_code
       };
       if (args.state != null)
@@ -124,8 +124,8 @@ const resolvers = {
         query.premise_type = args.premise_type;
       return getPriceListJoinPremises(databaseInstance, query);
     },
-    getPriceListJoinItems: async (_, args) => {
-      let query = {};
+    getPriceListJoinItems: async (_: any, args: any): Promise<Array<PriceJoinItem>> => {
+      let query: NestedObject = {};
       if (args.premise_code != null)
         query.premise_code = args.premise_code;
       if (args.item_group != null)

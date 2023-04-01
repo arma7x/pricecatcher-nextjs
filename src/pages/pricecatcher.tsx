@@ -1,15 +1,15 @@
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { Item, PriceJoinPremise, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems } from '../database';
+import { NestedObject, Item, PriceJoinPremise, databaseInstance, itemGroups, itemCategories, premisesNestedLocations, searchItems } from '../database';
 import Modal from '../Modal';
 import { flexRow, marginLeft, thPadTop } from '../styles/styles';
 
 function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, initialItems }: any) {
 
-  const [item, setItem] = useState({});
+  const [item, setItem] = useState<Item|NestedObject>({});
   const [visible, setVisibility] = useState(false);
   const [priceList, setPriceList] = useState([]);
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<Array<Item>>([]);
   const [group, setGroup] = useState(false);
   const [category, setCategory] = useState(false);
   const [state, setState] = useState(false);
@@ -163,7 +163,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
         <div style={{ position: 'absolute', marginTop: '50px' }}>
           <Modal visibility={visible} setVisibility={setVisibility}>
             {
-              Object.keys(item.length > 0) &&
+              Object.keys(item).length > 0 &&
               <div style={{ ...flexRow, alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, zIndex: 99, backgroundColor: '#fff', width: '100%', height: '65px' }}>
                 <h3>
                   Kod Barangan: {item["item_code"]}, {item["item"]}, {item["unit"]}
@@ -195,7 +195,7 @@ function PriceCatcher({ itemGroups, itemCategories, premisesNestedLocations, ini
                         <td>{item.date}</td>
                         <td>{item.premise_code}</td>
                         <td>{item.item_code}</td>
-                        <td>RM{parseFloat(item.price).toFixed(2)}</td>
+                        <td>RM{item.price.toFixed(2)}</td>
                         <td>{item.premise}</td>
                         <td>{item.address}</td>
                         <td>{item.premise_type}</td>
